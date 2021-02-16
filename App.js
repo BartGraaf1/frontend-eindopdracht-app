@@ -1,20 +1,34 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
 import MovieIndex from './screens/MovieIndex';
 import MovieShow from './screens/MovieShow';
+import { SearchProvider } from './contexts/SearchProvider';
 
-const Stack = createStackNavigator();
+const AppStack = createStackNavigator({
+    MovieIndex: {
+        screen: MovieIndex,
+        navigationOptions: () => ({
+            title: 'Search movies',
+        })
+    },
+    MovieShow: {
+        screen: MovieShow,
+        navigationOptions: () => ({
+            title: 'Movies Show',
+        })
+    },
+});
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Movies" component={MovieIndex} />
-        <Stack.Screen name="MovieShow" component={MovieShow} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+const AppContainer = createAppContainer(AppStack);
+
+const App = () => {
+    return (
+        <SearchProvider>
+            <AppContainer />
+        </SearchProvider>
+    );
 }
+export default App;

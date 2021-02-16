@@ -1,13 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import {Controller, useForm} from "react-hook-form";
-import ModalDropdown from 'react-native-modal-dropdown';
-import { Text, View, TextInput, Button, Alert, FlatList, StyleSheet } from "react-native";
+import React, {useState, useEffect, useContext} from 'react';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+  Button,
+  TextInput,
+} from 'react-native';
 import axios from 'axios';
+import { useForm, Controller } from "react-hook-form";
 import MovieListItem from '../components/MovieListItem';
+import CountryPicker from '../components/CountryPicker';
+import TypePicker from '../components/TypePicker';
+import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
+
 export default function MovieIndex({ navigation }) {
-  const [movies, setMovies] = useState([]);
+const [movies, setMovies] = useState([]);
+  const {country, type, query, setQueryF} = useContext(SearchContext);
   const { control, handleSubmit, errors } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit = data => formSubmit(data);
+
+  function formSubmit(data, e) {
+    setQueryF(data.query);
+    e.preventDefault();
+  }
 
   useEffect(() => {
     async function getMovies() {
@@ -54,61 +73,34 @@ export default function MovieIndex({ navigation }) {
     navigation.navigate('MovieShow', { id: id });
   }
 
-    const DEMO_OPTIONS_2 = [
-        {"name": "Rex", "age": 30},
-        {"name": "Mary", "age": 25},
-        {"name": "John", "age": 41},
-        {"name": "Jim", "age": 22},
-        {"name": "Susan", "age": 52},
-        {"name": "Brent", "age": 33},
-        {"name": "Alex", "age": 16},
-        {"name": "Ian", "age": 20},
-        {"name": "Phil", "age": 24},
-    ];
 
   return (
     <View>
-      <View>
-        <Controller
-            control={control}
-            render={({ onChange, onBlur, value }) => (
-                <TextInput
-                    style={styles.input}
-                    onBlur={onBlur}
-                    onChangeText={value => onChange(value)}
-                    value={value}
-                />
-            )}
-            name="firstName"
-            rules={{ required: true }}
-            defaultValue=""
-        />
-        {errors.firstName && <Text>This is required.</Text>}
-
-        <Controller
-            control={control}
-            render={({ onChange, onBlur, value }) => (
-                <TextInput
-                    style={styles.input}
-                    onBlur={onBlur}
-                    onChangeText={value => onChange(value)}
-                    value={value}
-                />
-            )}
-            name="lastName"
-            defaultValue=""
-        />
-          <ModalDropdown ref="dropdown_2"
-                         style={styles.dropdown_2}
-                         textStyle={styles.dropdown_2_text}
-                         dropdownStyle={styles.dropdown_2_dropdown}
-                         options={DEMO_OPTIONS_2}
-                         renderButtonText={(rowData) => this._dropdown_2_renderButtonText(rowData)}
-                         renderRow={this._dropdown_2_renderRow.bind(this)}
-                         renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => this._dropdown_2_renderSeparator(sectionID, rowID, adjacentRowHighlighted)}
+      <SafeAreaView style={styles.main}>
+        <View>
+          <Controller
+              control={control}
+              render={({ onChange, onBlur, value }) => (
+                  <TextInput
+                      placeholder="Query"
+                      style={styles.input}
+                      onBlur={onBlur}
+                      onChangeText={value => onChange(value)}
+                      value={value}
+                  />
+              )}
+              name="query"
+              defaultValue=""
           />
-        <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-      </View>
+          <ScrollView>
+            <CountryPicker />
+          </ScrollView>
+          <ScrollView>
+            <TypePicker />
+          </ScrollView>
+          <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+        </View>
+      </SafeAreaView>
       <FlatList
         data={movies}
         renderItem={({ item }) => {
@@ -120,6 +112,8 @@ export default function MovieIndex({ navigation }) {
         ItemSeparatorComponent={() => {
           return <View style={styles.itemSeparator} />;
         }}
+        onEndReachedThreshold={0.9}
+        onEndReached={getMovies}
       />
     </View>
   );
@@ -130,4 +124,18 @@ const styles = StyleSheet.create({
     borderBottomColor: 'blue',
     borderWidth: 2,
   },
+  input:{
+    backgroundColor: 'white',
+    margin: 10,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    padding: 5,
+  },
+  heading: {
+    marginLeft: 8,
+    fontSize: 20,
+    fontWeight: 'bold',
+  }
 });

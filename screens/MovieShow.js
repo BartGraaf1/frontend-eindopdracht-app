@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import axios from 'axios';
+import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
 
 export default function MovieShow(props) {
   const [movie, setMovie] = useState({});
@@ -11,7 +12,7 @@ export default function MovieShow(props) {
         const options = {
           method: 'GET',
           url: 'https://unogsng.p.rapidapi.com/title',
-          params: {netflixid: props.route.params.id},
+          params: {netflixid: props.navigation.state.params.id},
           headers: {
             'x-rapidapi-key': '37ae6a10eamsh713bf3d65c41beap16e4cdjsna4b058e9b131',
             'x-rapidapi-host': 'unogsng.p.rapidapi.com'
@@ -31,7 +32,6 @@ export default function MovieShow(props) {
 
     getMovie();
   }, []);
-  console.log(movie);
   return (
     <View style={styles.appContainer}>
       <Text>{movie.title}</Text>
