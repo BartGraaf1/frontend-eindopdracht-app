@@ -16,54 +16,47 @@ import MovieListItem from '../components/MovieListItem';
 import CountryPicker from '../components/CountryPicker';
 import TypePicker from '../components/TypePicker';
 import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
+import {getRecipes} from '../api';
 
 export default function MovieIndex({ navigation }) {
 const [movies, setMovies] = useState([]);
   const {country, type, query, setQueryF} = useContext(SearchContext);
   const { control, handleSubmit, errors } = useForm();
+  const [page, setPage] = useState(0);
   const onSubmit = data => formSubmit(data);
+
+
+  useEffect(() => {
+    const fetchRecipes = async (thePage) => {
+      const searchArray = [];
+      if(country !== undefined){
+        searchArray['country'] = country;
+      }
+      if(type !== undefined){
+        searchArray['type'] = type;
+      }
+      if(query !== undefined){
+        searchArray['query'] = query;
+      }
+      const response = await getRecipes(searchArray, thePage);
+
+      let arrHolder = movies;
+      Array.prototype.push.apply(arrHolder,response.results);
+      setMovies(arrHolder);
+
+    };
+    fetchRecipes(page);
+  }, [page]);
+
+  const handleLoadmore = () => {
+    setPage(page + 1);
+  };
+
 
   function formSubmit(data, e) {
     setQueryF(data.query);
     e.preventDefault();
   }
-
-  useEffect(() => {
-    async function getMovies() {
-      try {
-          const options = {
-            method: 'GET',
-            url: 'https://unogsng.p.rapidapi.com/search',
-            params: {
-              start_year: '1972',
-              orderby: 'rating',
-              audiosubtitle_andor: 'and',
-              limit: '100',
-              subtitle: 'english',
-              countrylist: '78,46',
-              audio: 'english',
-              country_andorunique: 'unique',
-              offset: '0',
-              end_year: '2019'
-            },
-            headers: {
-              'x-rapidapi-key': '37ae6a10eamsh713bf3d65c41beap16e4cdjsna4b058e9b131',
-              'x-rapidapi-host': 'unogsng.p.rapidapi.com'
-            }
-          };
-
-          axios.request(options).then(function (response) {
-            setMovies(response.data.results);
-          }).catch(function (error) {
-            console.error(error);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    getMovies();
-  }, []);
 
   function goToMovie(id) {
     // het tweede argument van navigate moet een object zijn
@@ -112,8 +105,8 @@ const [movies, setMovies] = useState([]);
         ItemSeparatorComponent={() => {
           return <View style={styles.itemSeparator} />;
         }}
-        onEndReachedThreshold={0.9}
-        onEndReached={getMovies}
+        onEndReachedThreshold={20}
+        onEndReached={handleLoadmore}
       />
     </View>
   );
