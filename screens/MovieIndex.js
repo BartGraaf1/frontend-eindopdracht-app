@@ -16,18 +16,21 @@ import MovieListItem from '../components/MovieListItem';
 import CountryPicker from '../components/CountryPicker';
 import TypePicker from '../components/TypePicker';
 import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
-import {getRecipes} from '../api';
+import {getMoviesApi} from '../api';
 
 export default function MovieIndex({ navigation }) {
 const [movies, setMovies] = useState([]);
   const {country, type, query, setQueryF} = useContext(SearchContext);
   const { control, handleSubmit, errors } = useForm();
   const [page, setPage] = useState(0);
+  const [callSearch, setCallSearch] = useState(0);
+  const [loading, setLoading] = useState(false);
   const onSubmit = data => formSubmit(data);
 
 
   useEffect(() => {
     const fetchRecipes = async (thePage) => {
+      setLoading(true);
       const searchArray = [];
       if(country !== undefined){
         searchArray['country'] = country;
@@ -38,23 +41,33 @@ const [movies, setMovies] = useState([]);
       if(query !== undefined){
         searchArray['query'] = query;
       }
-      const response = await getRecipes(searchArray, thePage);
+      const response = await getMoviesApi(searchArray, thePage);
 
       let arrHolder = movies;
-      Array.prototype.push.apply(arrHolder,response.results);
+      if(page>0){
+        Array.prototype.push.apply(arrHolder,response.results);
+      }else{
+        arrHolder = response.results;
+      }
+
       setMovies(arrHolder);
+      setLoading(false);
 
     };
-    fetchRecipes(page);
-  }, [page]);
+      fetchRecipes(page);
+  }, [page, callSearch]);
 
   const handleLoadmore = () => {
-    setPage(page + 1);
+    if(!loading){
+      setPage(page + 1);
+    }
   };
 
 
   function formSubmit(data, e) {
     setQueryF(data.query);
+    setCallSearch(callSearch+1);
+    setPage(0);
     e.preventDefault();
   }
 
@@ -98,14 +111,14 @@ const [movies, setMovies] = useState([]);
         data={movies}
         renderItem={({ item }) => {
           return (
-            <MovieListItem item={item} onPress={() => goToMovie(item.nfid)} />
+            <MovieListItem type={type} item={item} onPress={() => goToMovie(item.nfid)} />
           );
         }}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => {
           return <View style={styles.itemSeparator} />;
         }}
-        onEndReachedThreshold={20}
+        onEndReachedThreshold={0.9}
         onEndReached={handleLoadmore}
       />
     </View>
@@ -114,7 +127,7 @@ const [movies, setMovies] = useState([]);
 
 const styles = StyleSheet.create({
   itemSeparator: {
-    borderBottomColor: 'blue',
+    borderBottomColor: 'black',
     borderWidth: 2,
   },
   input:{

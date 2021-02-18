@@ -14,6 +14,7 @@ export default function CountryPicker() {
             selectedValue={country}
             onValueChange={(v) => setCountryF(v)}
             prompt="Pick a country to search in">
+          <Item label='Netherlands ' value='67'/>
           <Item label='Argentina ' value='21'/>
           <Item label='Australia ' value='23'/>
           <Item label='Belgium ' value='26'/>
@@ -24,7 +25,6 @@ export default function CountryPicker() {
           <Item label='France ' value='45'/>
           <Item label='United Kingdom' value='46'/>
           <Item label='Mexico ' value='65'/>
-          <Item label='Netherlands ' value='67'/>
           <Item label='Sweden ' value='73'/>
           <Item label='United States' value='78'/>
           <Item label='Iceland ' value='265'/>

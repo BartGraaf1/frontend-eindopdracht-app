@@ -15,8 +15,8 @@ export default function TypePicker() {
             onValueChange={(v) => setTypeF(v)}
             prompt="Select type of search">
           <Item label='Normal search ' value='1'/>
-          <Item label='Expiring ' value='2'/>
-          <Item label='New ' value='3'/>
+          <Item label='Expiring this month' value='2'/>
+          <Item label='Added this month' value='3'/>
         </Picker>
       </View>
   );

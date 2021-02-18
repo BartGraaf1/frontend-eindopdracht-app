@@ -1,12 +1,19 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
 
-export default function MovieListItem({item, onPress}) {
+export default function MovieListItem({type, item, onPress}) {
+  let subtitle;
+  if (type === "2") {
+    subtitle = `Expiring on (${item.expiredate})`
+  } else {
+    subtitle = `${item.vtype} (${item.titledate})`
+  }
+
   return (
     <Pressable style={styles.listItem} onPress={onPress}>
-      <Text style={styles.title}>{item.title} </Text>
+      <Text style={styles.title}>{unescape(item.title)} </Text>
       <Text style={styles.subtitle}>
-        {item.vtype} ({item.titledate})
+        {subtitle}
       </Text>
     </Pressable>
   );

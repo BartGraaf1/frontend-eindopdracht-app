@@ -12,19 +12,38 @@ function addToSearchString(initialString, newString, count){
   return finalString;
 }
 
-export async function getRecipes(searchArray, page) {
+export async function getMoviesApi(searchArray, page) {
   const limit = 20;
   let searchUsed = 0;
-  const offset = page*limit;
-  let searchString = "https://unogsng.p.rapidapi.com/search";
+  let searchString = "";
+  console.log(typeof  searchArray['type'])
+  switch (searchArray['type']) {
+    case "1":
+      searchString = "https://unogsng.p.rapidapi.com/search";
+      break;
+    case "2":
+      searchString = "https://unogsng.p.rapidapi.com/expiring";
+      break;
+    case "3":
+      searchString = "https://unogsng.p.rapidapi.com/search";
+      const date = new Date();
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      searchAdd = "newdate=" + firstDay;
+      searchString = addToSearchString(searchString, searchAdd, searchUsed);
+      searchUsed =+ 1;
+      break;
+    default:
+      searchString = "https://unogsng.p.rapidapi.com/search";
+  }
   let searchAdd = "";
   if (searchArray['country'] > 0) {
     searchAdd = "countrylist=" + searchArray['country'];
+    console.log("Land: " +  searchArray['country']);
     searchString = addToSearchString(searchString, searchAdd, searchUsed);
     searchUsed =+ 1;
   }
   if (searchArray['query'] !== undefined) {
-    searchAdd = "query=" + searchArray['query'];
+    searchAdd = "query=" + searchArray['query'].trim();
     searchString = addToSearchString(searchString, searchAdd, searchUsed);
     searchUsed =+ 1;
   }
@@ -37,7 +56,6 @@ export async function getRecipes(searchArray, page) {
 
   searchAdd = "&limit=" + limit;
   searchString += searchAdd;
-  console.log(searchString);
   const result = await axios.get(
       searchString,
       {
