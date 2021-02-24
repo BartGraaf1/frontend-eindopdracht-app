@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "eslint": "^7.20.0",
     "react-native-modal-dropdown": "^1.0.0",
     "react-native-picker": "^4.3.7"
   },

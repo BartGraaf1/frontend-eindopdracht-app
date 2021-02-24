@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import axios from "axios";
-import { SearchContext, SearchProvider } from "../contexts/SearchProvider.js";
 
 export default function MovieShow(props) {
   const [movie, setMovie] = useState({});
@@ -62,7 +61,6 @@ export default function MovieShow(props) {
         console.log(e);
       }
     }
-
     getMovie();
   }, []);
   return (
@@ -87,7 +85,7 @@ export default function MovieShow(props) {
                 <View style={styles.displayTextInline}>
                   <Text style={styles.textH}>Year : </Text>
                   <Text>{movie.year}</Text>
-                </View> 
+                </View>
                 <View style={styles.displayTextInline}>
                   <Text style={styles.textH}>Genre: </Text>
                   <Text>{movie.imdbgenre}</Text>

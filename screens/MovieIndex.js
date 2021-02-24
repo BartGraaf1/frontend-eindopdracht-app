@@ -1,26 +1,24 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {
-  Platform,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   FlatList,
   SafeAreaView,
   Button,
   TextInput,
 } from 'react-native';
-import axios from 'axios';
 import { useForm, Controller } from "react-hook-form";
 import MovieListItem from '../components/MovieListItem';
 import CountryPicker from '../components/CountryPicker';
 import TypePicker from '../components/TypePicker';
-import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
+import {SearchContext} from '../contexts/SearchProvider.js';
 import {getMoviesApi} from '../api';
 
 export default function MovieIndex({ navigation }) {
-const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
   const {country, type, query, setQueryF} = useContext(SearchContext);
+  const [typeCurr, setTypeCurr] = useState(1);
   const { control, handleSubmit, errors } = useForm();
   const [page, setPage] = useState(0);
   const [callSearch, setCallSearch] = useState(0);
@@ -29,7 +27,7 @@ const [movies, setMovies] = useState([]);
 
 
   useEffect(() => {
-    const fetchRecipes = async (thePage) => {
+    const fetchMovies = async (thePage) => {
       setLoading(true);
       const searchArray = [];
       if(country !== undefined){
@@ -42,7 +40,6 @@ const [movies, setMovies] = useState([]);
         searchArray['query'] = query;
       }
       const response = await getMoviesApi(searchArray, thePage);
-
       let arrHolder = movies;
       if(page>0){
         Array.prototype.push.apply(arrHolder,response.results);
@@ -54,7 +51,7 @@ const [movies, setMovies] = useState([]);
       setLoading(false);
 
     };
-      fetchRecipes(page);
+      fetchMovies(page);
   }, [page, callSearch]);
 
   const handleLoadmore = () => {
@@ -64,18 +61,14 @@ const [movies, setMovies] = useState([]);
   };
 
 
-  function formSubmit(data, e) {
+  function formSubmit(data) {
     setQueryF(data.query);
     setCallSearch(callSearch+1);
     setPage(0);
-    e.preventDefault();
+    setTypeCurr(type);
   }
 
   function goToMovie(id) {
-    // het tweede argument van navigate moet een object zijn
-    // deze wordt in het scherm beschikbaar onder props.route.params
-    // de key die je hier zet kan je gebruiken om uit te lezen, dus in dit geval:
-    // props.route.params.id
     navigation.navigate('MovieShow', { id: id });
   }
 
@@ -84,6 +77,7 @@ const [movies, setMovies] = useState([]);
     <View>
       <SafeAreaView style={styles.main}>
         <View>
+          {!(parseInt(typeCurr) === 2) &&
           <Controller
               control={control}
               render={({ onChange, onBlur, value }) => (
@@ -98,6 +92,7 @@ const [movies, setMovies] = useState([]);
               name="query"
               defaultValue=""
           />
+          }
           <ScrollView>
             <CountryPicker />
           </ScrollView>
@@ -111,10 +106,10 @@ const [movies, setMovies] = useState([]);
         data={movies}
         renderItem={({ item }) => {
           return (
-            <MovieListItem type={type} item={item} onPress={() => goToMovie(item.nfid)} />
+            <MovieListItem type={typeCurr} item={item} onPress={() => goToMovie(item.nfid)} />
           );
         }}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.uid.toString()}
         ItemSeparatorComponent={() => {
           return <View style={styles.itemSeparator} />;
         }}

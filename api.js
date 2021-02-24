@@ -12,11 +12,15 @@ function addToSearchString(initialString, newString, count){
   return finalString;
 }
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+
 export async function getMoviesApi(searchArray, page) {
   const limit = 20;
   let searchUsed = 0;
   let searchString = "";
-  console.log(typeof  searchArray['type'])
   switch (searchArray['type']) {
     case "1":
       searchString = "https://unogsng.p.rapidapi.com/search";
@@ -38,7 +42,6 @@ export async function getMoviesApi(searchArray, page) {
   let searchAdd = "";
   if (searchArray['country'] > 0) {
     searchAdd = "countrylist=" + searchArray['country'];
-    console.log("Land: " +  searchArray['country']);
     searchString = addToSearchString(searchString, searchAdd, searchUsed);
     searchUsed =+ 1;
   }
@@ -51,7 +54,6 @@ export async function getMoviesApi(searchArray, page) {
     const offsetSearch = limit * page;
     searchAdd = "offset=" + offsetSearch;
     searchString = addToSearchString(searchString, searchAdd, searchUsed);
-    searchUsed =+ 1;
   }
 
   searchAdd = "&limit=" + limit;
@@ -66,5 +68,16 @@ export async function getMoviesApi(searchArray, page) {
         },
       }
   );
+  if(result.data.results !== undefined){
+    result.data.results.map(movie => {
+      if(searchArray['type'] === "2"){
+        if(movie.netflixid !== undefined && movie.netflixid !== null){
+          movie.nfid = movie.netflixid;
+        }
+      }
+      movie.uid = getRandomInt(100000) + movie.nfid;
+      return movie;
+    })
+  }
   return result.data;
 }

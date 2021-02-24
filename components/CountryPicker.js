@@ -1,7 +1,7 @@
-import React, {useContext, useState} from 'react';
-import {Text, StyleSheet, View, ScrollView} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {SearchContext, SearchProvider} from '../contexts/SearchProvider.js';
+import {SearchContext} from '../contexts/SearchProvider.js';
 
 const Item = Picker.Item;
 
