@@ -21,6 +21,8 @@ export async function getMoviesApi(searchArray, page) {
   const limit = 20;
   let searchUsed = 0;
   let searchString = "";
+  const date = new Date();
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   switch (searchArray['type']) {
     case "1":
       searchString = "https://unogsng.p.rapidapi.com/search";
@@ -30,8 +32,6 @@ export async function getMoviesApi(searchArray, page) {
       break;
     case "3":
       searchString = "https://unogsng.p.rapidapi.com/search";
-      const date = new Date();
-      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
       searchAdd = "newdate=" + firstDay;
       searchString = addToSearchString(searchString, searchAdd, searchUsed);
       searchUsed =+ 1;

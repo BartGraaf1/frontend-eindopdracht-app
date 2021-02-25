@@ -19,7 +19,7 @@ export default function MovieIndex({ navigation }) {
   const [movies, setMovies] = useState([]);
   const {country, type, query, setQueryF} = useContext(SearchContext);
   const [typeCurr, setTypeCurr] = useState(1);
-  const { control, handleSubmit, errors } = useForm();
+  const { control, handleSubmit } = useForm();
   const [page, setPage] = useState(0);
   const [callSearch, setCallSearch] = useState(0);
   const [loading, setLoading] = useState(false);
