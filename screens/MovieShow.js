@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Platform } from "react-native";
+import config from '../config';
 import axios from "axios";
 
 export default function MovieShow(props) {
@@ -15,9 +16,8 @@ export default function MovieShow(props) {
           url: "https://unogsng.p.rapidapi.com/title",
           params: { netflixid: props.navigation.state.params.id },
           headers: {
-            "x-rapidapi-key":
-                "37ae6a10eamsh713bf3d65c41beap16e4cdjsna4b058e9b131",
-            "x-rapidapi-host": "unogsng.p.rapidapi.com",
+            "x-rapidapi-key":  config.REACT_APP_UNOGSNG_API_KEY,
+            "x-rapidapi-host": config.REACT_APP_UNOGSNG_API_HOST,
           },
         };
 
@@ -36,9 +36,8 @@ export default function MovieShow(props) {
           url: "https://unogsng.p.rapidapi.com/titlecountries",
           params: { netflixid: props.navigation.state.params.id },
           headers: {
-            "x-rapidapi-key":
-                "37ae6a10eamsh713bf3d65c41beap16e4cdjsna4b058e9b131",
-            "x-rapidapi-host": "unogsng.p.rapidapi.com",
+            "x-rapidapi-key": config.REACT_APP_UNOGSNG_API_KEY,
+            "x-rapidapi-host": config.REACT_APP_UNOGSNG_API_HOST,
           },
         };
 
@@ -46,11 +45,9 @@ export default function MovieShow(props) {
             .request(optionsLangs)
             .then(function (response) {
               let countries = response.data.results;
-              // if(countries.prop && countries.prop.constructor === Array){
               countries = countries.map(country => {
                   return country.country.trim();
                 }).join(', ');
-              // }
               setCountries(countries);
               setLoading(false);
             })
@@ -68,8 +65,12 @@ export default function MovieShow(props) {
         <ScrollView>
           {!loading ? (
               <View style={styles.appContainer}>
-                <Text style={styles.movieHeader}>{movie.title}</Text>
-                <Text>{unescape(movie.imdbplot)}</Text>
+                <View>
+                  <Text style={styles.movieHeader}>{movie.title}</Text>
+                </View>
+                <View>
+                  <Text>{unescape(movie.imdbplot)}</Text>
+                </View>
                 <View style={styles.displayTextInline}>
                   <Text style={styles.textH}>Rating: </Text>
                   <Text>{movie.imdbrating}</Text>
@@ -135,11 +136,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   displayTextInline: {
-    height: 30,
     paddingTop: 20,
     width: 350,
     flexDirection: "row",
     alignItems: "flex-start",
+    height: Platform.OS === 'ios' ? 50 : 40
   },
   displayTextUnder: {
     paddingTop: 20

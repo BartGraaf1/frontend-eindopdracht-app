@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Platform} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {SearchContext} from '../contexts/SearchProvider.js';
 
@@ -57,6 +57,10 @@ const styles = StyleSheet.create({
   heading: {
     marginLeft: 8,
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+  },
+  container:{
+    height: Platform.OS === 'ios' ? 150 : 50,
+    marginTop: 0
   }
 });

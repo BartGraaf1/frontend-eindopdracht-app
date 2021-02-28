@@ -6,7 +6,7 @@ import {
   FlatList,
   SafeAreaView,
   Button,
-  TextInput,
+  TextInput, Platform,
 } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import MovieListItem from '../components/MovieListItem';
@@ -126,6 +126,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   input:{
+    height: Platform.OS === 'ios' ? 30 : 50,
+    marginBottom: 0,
     backgroundColor: 'white',
     margin: 10,
     borderLeftWidth: 1,
