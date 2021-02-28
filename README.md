@@ -40,6 +40,20 @@ Je kan nu het project starten door het volgende command uit te voeren.
 npm start
 ```
 
+Als dit de eerste keer is dat je een Expo project start krijg je de volgende vraag je in terminal:
+
+```bash
+Do you want to install it globally [Y/n]?
+```
+
+Type nu: 
+
+```bash
+Y
+```
+
+ En druk op enter. Nu worden de overige bestanden geïnstalleerd.
+
 ## Stap 4 - Open het project via de telefoon
 
 Als het goed is gegaan krijg je nu een QR code te zien, deze moet je scannen met de app die je eerder geïnstalleerd hebt.
@@ -47,3 +61,4 @@ Als het goed is gegaan krijg je nu een QR code te zien, deze moet je scannen met
 ## Klaar
 
 Als alles goed is gegaan krijg je nu via je telefoon de app te zien. 
+
