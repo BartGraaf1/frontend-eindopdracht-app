@@ -2,7 +2,7 @@
 
 Netflix lookup is een applicatie gecreëerd om ervoor zodat gebruikers gemakkelijk kunnen kijken welke welke films en series er beschikbaar zijn in een bepaald land, ook kunnen ze de nieuwe films en series zien en de films en series die van Netflix gaan verdwijnen via hun telefoon.
 
-![Zo ziet het project er uit](https://github.com/BartGraaf1/frontend-eindopdracht-app/tree/main/public/github.png?raw=true)
+![Zo ziet het project er uit](https://raw.githubusercontent.com/BartGraaf1/frontend-eindopdracht-app/master/assets/github.png)
 
 ## Installatie
 
